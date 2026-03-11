@@ -63,11 +63,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#1C1917" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <meta property="og:image" content="/icon-512.png" />
-        <meta name="twitter:image" content="/icon-512.png" />
+        <link rel="icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/favicon.ico`} sizes="any" />
+        <link rel="icon" type="image/png" sizes="192x192" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icon-192.png`} />
+        <link rel="apple-touch-icon" href={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/apple-touch-icon.png`} />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icon-512.png`} />
+        <meta name="twitter:image" content={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icon-512.png`} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

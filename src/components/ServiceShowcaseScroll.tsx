@@ -5,7 +5,8 @@ import { useScroll } from "framer-motion";
 import Preloader from "./Preloader";
 
 const TOTAL_FRAMES = 200;
-const FOLDER_PATH = "/images/wood";
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const FOLDER_PATH = `${BASE_PATH}/images/wood`;
 
 export default function ServiceShowcaseScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -63,6 +64,14 @@ export default function ServiceShowcaseScroll() {
         if (loadedCountRef.current === 1) {
           drawFrame(0);
         }
+        if (loadedCountRef.current >= TOTAL_FRAMES) {
+          setTimeout(() => setLoaded(true), 400);
+        }
+      };
+      img.onerror = () => {
+        loadedCountRef.current++;
+        const pct = (loadedCountRef.current / TOTAL_FRAMES) * 100;
+        setLoadProgress(pct);
         if (loadedCountRef.current >= TOTAL_FRAMES) {
           setTimeout(() => setLoaded(true), 400);
         }
