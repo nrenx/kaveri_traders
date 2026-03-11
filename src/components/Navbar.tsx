@@ -63,7 +63,7 @@ export default function Navbar() {
               {/* Logo */}
               <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
                 <Image
-                  src="/logo.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`}
                   alt="Kaveri Traders Logo"
                   width={40}
                   height={40}

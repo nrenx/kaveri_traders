@@ -26,7 +26,7 @@ export default function Footer() {
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                 <Image
-                  src="/logo.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/logo.png`}
                   alt="Kaveri Traders Logo"
                   width={32}
                   height={32}

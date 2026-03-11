@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
-const basePath = "/kaveri_traders";
+const isProd = process.env.NODE_ENV === "production";
+const basePath = isProd ? "/kaveri_traders" : "";
 
 const nextConfig: NextConfig = {
   output: "export",
-  basePath,
+  basePath: basePath || undefined,
   images: { unoptimized: true },
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
