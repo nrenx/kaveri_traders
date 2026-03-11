@@ -1,26 +1,275 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-amber-50: #FFF8E1;
+  --color-amber-100: #FFECB3;
+  --color-amber-200: #FFE082;
+  --color-amber-300: #FFD54F;
+  --color-amber-400: #FFCA28;
+  --color-amber-500: #FFC107;
+  --color-amber-600: #FFB300;
+  --color-amber-700: #FF8F00;
+  --color-amber-800: #FF6F00;
+  --color-stone-50: #FAFAF9;
+  --color-stone-100: #F5F5F4;
+  --color-stone-200: #E7E5E4;
+  --color-stone-300: #D6D3D1;
+  --color-stone-400: #A8A29E;
+  --color-stone-500: #78716C;
+  --color-stone-600: #57534E;
+  --color-stone-700: #44403C;
+  --color-stone-800: #292524;
+  --color-stone-900: #1C1917;
+  --color-stone-950: #0C0A09;
+  --color-brown-50: #EFEBE9;
+  --color-brown-100: #D7CCC8;
+  --color-brown-200: #BCAAA4;
+  --color-brown-300: #A1887F;
+  --color-brown-400: #8D6E63;
+  --color-brown-500: #795548;
+  --color-brown-600: #6D4C41;
+  --color-brown-700: #5D4037;
+  --color-brown-800: #4E342E;
+  --color-brown-900: #3E2723;
+  --color-forest-500: #2E7D32;
+  --color-forest-600: #1B5E20;
+  --color-green-50: #E8F5E9;
+  --color-green-100: #C8E6C9;
+  --color-green-600: #43A047;
+  --color-green-700: #388E3C;
+  --color-green-800: #2E7D32;
+  --color-fire-400: #FF7043;
+  --color-fire-500: #F4511E;
+  --color-fire-600: #D84315;
+  --color-fire-700: #BF360C;
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-playfair);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #FAFAF9;
+  min-height: 100vh;
+  color: #3E2723;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #FF8F00;
+  color: #ffffff;
+}
+
+/* Noise texture overlay for depth */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Display font class for headings */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Premium text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #FF8F00 0%, #D84315 50%, #5D4037 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated gradient border */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #FF8F00, #8D6E63, #5D4037);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Section divider */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #D6D3D1 20%, #8D6E63 50%, #D6D3D1 80%, transparent 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A8A29E;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8D6E63;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #A8A29E transparent;
+}
+
+/* Smooth hover lift for cards — only on devices with hover support */
+.card-hover {
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (hover: hover) {
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -12px rgba(62, 39, 35, 0.15);
+  }
+}
+
+/* Button shine animation */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.2) 55%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+.btn-shine:hover::after {
+  transform: translateX(100%);
+}
+
+/* Hero shimmer on "Traders" text */
+.hero-shimmer {
+  position: relative;
+  display: inline-block;
+  padding-right: 0.15em;
+  margin-right: -0.05em;
+  overflow: visible;
+  background: linear-gradient(
+    120deg,
+    #FFE082 0%,
+    #FFD54F 40%,
+    #FFFFFF 50%,
+    #FFD54F 60%,
+    #FFE082 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: heroShimmer 4s ease-in-out infinite;
+}
+
+@keyframes heroShimmer {
+  0%, 100% {
+    background-position: 100% center;
+  }
+  50% {
+    background-position: -100% center;
+  }
+}
+
+/* Accent line decoration */
+.accent-line {
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, #FF8F00, #D84315);
+  border-radius: 2px;
+}
+
+/* Card spotlight glow — cursor-following effect (Linear/Raycast style) */
+/* Only on hover-capable devices */
+.card-glow {
+  position: relative;
+  overflow: hidden;
+}
+@media (hover: hover) {
+  .card-glow::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 143, 0, 0.06), transparent 40%);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .card-glow:hover::before {
+    opacity: 1;
+  }
+}
+
+/* Magnetic button hover effect */
+.btn-magnetic {
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Text reveal animation */
+.reveal-word {
+  display: inline-block;
+  overflow: hidden;
+}
+.reveal-word > span {
+  display: inline-block;
+  transform: translateY(100%);
+  animation: revealUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+@keyframes revealUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Lenis smooth scroll overrides */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Safe area insets for notched phones */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Focus visible for accessibility (Google/Stripe standard) */
+:focus-visible {
+  outline: 2px solid #FF8F00;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
