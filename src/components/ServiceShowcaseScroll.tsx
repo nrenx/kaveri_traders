@@ -14,6 +14,9 @@ export default function ServiceShowcaseScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const lockedVhRef = useRef<number>(0);
+  const prevWidthRef = useRef<number>(0);
+  const prevHeightRef = useRef<number>(0);
   const loadedFlagsRef = useRef<boolean[]>(Array(TOTAL_FRAMES).fill(false));
   const loadedCountRef = useRef(0);
   const currentFrameRef = useRef(0);
@@ -26,6 +29,11 @@ export default function ServiceShowcaseScroll() {
     target: containerRef,
     offset: ["start start", "end end"],
   });
+
+  const applyLockedViewport = useCallback((nextHeight: number) => {
+    lockedVhRef.current = nextHeight;
+    document.documentElement.style.setProperty("--hero-vh", `${nextHeight}px`);
+  }, []);
 
   const findNearestLoadedFrame = useCallback((targetIndex: number) => {
     if (loadedFlagsRef.current[targetIndex]) return targetIndex;
@@ -143,20 +151,40 @@ export default function ServiceShowcaseScroll() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    const isTouchDevice = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
+    const initialHeight = Math.round(window.visualViewport?.height ?? window.innerHeight);
+    applyLockedViewport(initialHeight);
+    prevWidthRef.current = window.innerWidth;
+    prevHeightRef.current = initialHeight;
+
     const resize = () => {
+      const nextWidth = window.innerWidth;
+      const nextHeight = Math.round(window.visualViewport?.height ?? window.innerHeight);
+
+      // On touch devices, ignore small viewport-height changes from browser chrome animation.
+      const widthChanged = Math.abs(nextWidth - prevWidthRef.current) > 40;
+      const heightChanged = Math.abs(nextHeight - prevHeightRef.current) > 120;
+      if (!isTouchDevice || widthChanged || heightChanged) {
+        applyLockedViewport(nextHeight);
+        prevWidthRef.current = nextWidth;
+        prevHeightRef.current = nextHeight;
+      }
+
       canvas.width = window.innerWidth;
-      canvas.height = Math.ceil(window.visualViewport?.height ?? window.innerHeight);
+      canvas.height = Math.max(1, lockedVhRef.current || nextHeight);
       drawFrame(currentFrameRef.current);
     };
 
     resize();
     window.addEventListener("resize", resize);
-    window.visualViewport?.addEventListener("resize", resize);
+    window.addEventListener("orientationchange", resize);
     return () => {
       window.removeEventListener("resize", resize);
-      window.visualViewport?.removeEventListener("resize", resize);
+      window.removeEventListener("orientationchange", resize);
+      document.documentElement.style.removeProperty("--hero-vh");
     };
-  }, [drawFrame]);
+  }, [applyLockedViewport, drawFrame]);
 
   // Scroll -> frame mapping
   useEffect(() => {
@@ -181,8 +209,15 @@ export default function ServiceShowcaseScroll() {
   return (
     <>
       <Preloader progress={loadProgress} isComplete={loaded} />
-      <div ref={containerRef} className="h-[500dvh] md:h-[500vh] relative bg-stone-950">
-        <div className="sticky top-0 h-dvh md:h-screen w-full overflow-hidden bg-stone-950">
+      <div
+        ref={containerRef}
+        className="md:h-[500vh] relative bg-stone-950"
+        style={{ height: "calc(var(--hero-vh, 100vh) * 5)" }}
+      >
+        <div
+          className="sticky top-0 md:h-screen w-full overflow-hidden bg-stone-950"
+          style={{ height: "var(--hero-vh, 100vh)" }}
+        >
           {/* Canvas background */}
           <canvas
             ref={canvasRef}

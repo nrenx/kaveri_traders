@@ -33,8 +33,15 @@ export default function HeroTextOverlays() {
   const ctaScale = useTransform(scrollYProgress, [0.75, 0.8, 0.9, 0.97], [0.95, 1, 1, 1.05]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 h-[500dvh] md:h-[500vh] pointer-events-none overflow-x-clip">
-      <div className="sticky top-0 h-dvh md:h-screen flex items-center justify-center overflow-x-clip">
+    <div
+      ref={containerRef}
+      className="absolute inset-0 md:h-[500vh] pointer-events-none overflow-x-clip"
+      style={{ height: "calc(var(--hero-vh, 100vh) * 5)" }}
+    >
+      <div
+        className="sticky top-0 md:h-screen flex items-center justify-center overflow-x-clip"
+        style={{ height: "var(--hero-vh, 100vh)" }}
+      >
         <div className="relative w-full max-w-5xl mx-auto px-6 sm:px-8 overflow-x-clip">
           {/* Hero */}
           <motion.div
