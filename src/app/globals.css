@@ -52,6 +52,8 @@ html {
   text-size-adjust: 100%;
   overflow-x: hidden;
   overflow-x: clip;
+  background: #0C0A09;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -62,6 +64,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 img,

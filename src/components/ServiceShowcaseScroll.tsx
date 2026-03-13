@@ -89,13 +89,17 @@ export default function ServiceShowcaseScroll() {
 
     const resize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.height = Math.ceil(window.visualViewport?.height ?? window.innerHeight);
       drawFrame(currentFrameRef.current);
     };
 
     resize();
     window.addEventListener("resize", resize);
-    return () => window.removeEventListener("resize", resize);
+    window.visualViewport?.addEventListener("resize", resize);
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.visualViewport?.removeEventListener("resize", resize);
+    };
   }, [drawFrame]);
 
   // Scroll -> frame mapping
@@ -121,24 +125,24 @@ export default function ServiceShowcaseScroll() {
   return (
     <>
       <Preloader progress={loadProgress} isComplete={loaded} />
-      <div ref={containerRef} className="h-[500svh] md:h-[500vh] relative">
-        <div className="sticky top-0 h-svh md:h-screen w-full overflow-hidden">
+      <div ref={containerRef} className="h-[500dvh] md:h-[500vh] relative">
+        <div className="sticky top-0 h-dvh md:h-screen w-full overflow-hidden">
           {/* Canvas background */}
           <canvas
             ref={canvasRef}
             className="absolute inset-0 w-full h-full"
             style={{ background: "#1C1917" }}
           />
-          {/* Cinematic gradient overlays — strong enough for text readability on bright images */}
-          <div className="absolute inset-0 bg-black/35 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/70 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30 pointer-events-none" />
-          {/* Center radial vignette — darkens where text sits */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.45) 100%)' }} />
+          {/* Cinematic gradient overlays — tuned lighter to reveal more frame detail */}
+          <div className="absolute inset-0 bg-black/22 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/5 to-black/45 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20 pointer-events-none" />
+          {/* Center radial vignette — lighter so mid-frame visuals stay visible */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0.14) 0%, rgba(0,0,0,0.3) 100%)' }} />
           {/* Top gradient for navbar readability */}
-          <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-black/45 to-transparent pointer-events-none" />
           {/* Bottom vignette */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-stone-950/60 to-transparent pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-stone-950/50 to-transparent pointer-events-none" />
         </div>
       </div>
     </>
