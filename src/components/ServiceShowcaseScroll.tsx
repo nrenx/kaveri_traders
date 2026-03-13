@@ -5,6 +5,8 @@ import { useScroll } from "framer-motion";
 import Preloader from "./Preloader";
 
 const TOTAL_FRAMES = 200;
+const INITIAL_READY_FRAMES = 24;
+const PRIORITY_FRAMES = 48;
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const FOLDER_PATH = `${BASE_PATH}/images/wood`;
 
@@ -12,8 +14,10 @@ export default function ServiceShowcaseScroll() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const loadedFlagsRef = useRef<boolean[]>(Array(TOTAL_FRAMES).fill(false));
   const loadedCountRef = useRef(0);
   const currentFrameRef = useRef(0);
+  const isReadyRef = useRef(false);
   const rafRef = useRef<number | null>(null);
   const [loadProgress, setLoadProgress] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -23,13 +27,27 @@ export default function ServiceShowcaseScroll() {
     offset: ["start start", "end end"],
   });
 
+  const findNearestLoadedFrame = useCallback((targetIndex: number) => {
+    if (loadedFlagsRef.current[targetIndex]) return targetIndex;
+    for (let delta = 1; delta < TOTAL_FRAMES; delta++) {
+      const prev = targetIndex - delta;
+      if (prev >= 0 && loadedFlagsRef.current[prev]) return prev;
+      const next = targetIndex + delta;
+      if (next < TOTAL_FRAMES && loadedFlagsRef.current[next]) return next;
+    }
+    return -1;
+  }, []);
+
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const img = imagesRef.current[frameIndex];
+    const resolvedIndex = findNearestLoadedFrame(frameIndex);
+    if (resolvedIndex < 0) return;
+
+    const img = imagesRef.current[resolvedIndex];
     if (!img || !img.complete || img.naturalWidth === 0) return;
 
     const cw = canvas.width;
@@ -44,42 +62,80 @@ export default function ServiceShowcaseScroll() {
     const dx = (cw - dw) / 2;
     const dy = (ch - dh) / 2;
 
-    ctx.clearRect(0, 0, cw, ch);
+    // Fill first to avoid any transient transparent flash during rapid viewport changes.
+    ctx.fillStyle = "#1C1917";
+    ctx.fillRect(0, 0, cw, ch);
     ctx.drawImage(img, dx, dy, dw, dh);
-  }, []);
+  }, [findNearestLoadedFrame]);
 
   // Load images
   useEffect(() => {
     loadedCountRef.current = 0;
+    loadedFlagsRef.current = Array(TOTAL_FRAMES).fill(false);
+    isReadyRef.current = false;
     const images: HTMLImageElement[] = [];
 
-    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    const setReadyIfNeeded = (count: number) => {
+      if (!isReadyRef.current && count >= INITIAL_READY_FRAMES) {
+        isReadyRef.current = true;
+        setTimeout(() => setLoaded(true), 200);
+      }
+    };
+
+    const handleLoadProgress = (index: number) => {
+      loadedCountRef.current++;
+      loadedFlagsRef.current[index] = true;
+      const pct = (loadedCountRef.current / TOTAL_FRAMES) * 100;
+      setLoadProgress(pct);
+      setReadyIfNeeded(loadedCountRef.current);
+
+      // Draw immediately when nearby frames become available.
+      if (Math.abs(index - currentFrameRef.current) <= 2) {
+        drawFrame(currentFrameRef.current);
+      }
+    };
+
+    const loadFrame = (index: number) => {
       const img = new Image();
-      const padded = String(i).padStart(3, "0");
+      img.decoding = "async";
+      const padded = String(index + 1).padStart(3, "0");
       img.src = `${FOLDER_PATH}/ezgif-frame-${padded}.jpg`;
       img.onload = () => {
-        loadedCountRef.current++;
-        const pct = (loadedCountRef.current / TOTAL_FRAMES) * 100;
-        setLoadProgress(pct);
-        if (loadedCountRef.current === 1) {
-          drawFrame(0);
-        }
-        if (loadedCountRef.current >= TOTAL_FRAMES) {
-          setTimeout(() => setLoaded(true), 400);
-        }
+        handleLoadProgress(index);
       };
       img.onerror = () => {
         loadedCountRef.current++;
         const pct = (loadedCountRef.current / TOTAL_FRAMES) * 100;
         setLoadProgress(pct);
-        if (loadedCountRef.current >= TOTAL_FRAMES) {
-          setTimeout(() => setLoaded(true), 400);
-        }
+        setReadyIfNeeded(loadedCountRef.current);
       };
-      images.push(img);
+      images[index] = img;
+    };
+
+    // Fast path: load a startup chunk first so hero becomes interactive sooner.
+    for (let i = 0; i < Math.min(PRIORITY_FRAMES, TOTAL_FRAMES); i++) {
+      loadFrame(i);
+    }
+
+    // Background path: keep loading remaining frames without blocking initial experience.
+    const restStart = Math.min(PRIORITY_FRAMES, TOTAL_FRAMES);
+    const loadRest = () => {
+      for (let i = restStart; i < TOTAL_FRAMES; i++) {
+        loadFrame(i);
+      }
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      (window as Window & { requestIdleCallback: (cb: () => void) => void }).requestIdleCallback(loadRest);
+    } else {
+      setTimeout(loadRest, 0);
     }
 
     imagesRef.current = images;
+
+    return () => {
+      imagesRef.current = [];
+    };
   }, [drawFrame]);
 
   // Canvas resize
@@ -125,8 +181,8 @@ export default function ServiceShowcaseScroll() {
   return (
     <>
       <Preloader progress={loadProgress} isComplete={loaded} />
-      <div ref={containerRef} className="h-[500dvh] md:h-[500vh] relative">
-        <div className="sticky top-0 h-dvh md:h-screen w-full overflow-hidden">
+      <div ref={containerRef} className="h-[500dvh] md:h-[500vh] relative bg-stone-950">
+        <div className="sticky top-0 h-dvh md:h-screen w-full overflow-hidden bg-stone-950">
           {/* Canvas background */}
           <canvas
             ref={canvasRef}
