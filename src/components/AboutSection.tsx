@@ -47,21 +47,21 @@ const features = [
 
 export default function AboutSection() {
   return (
-    <section id="about" className="relative py-16 sm:py-28 md:py-36 px-4 sm:px-8 overflow-hidden">
+    <section id="about" className="relative py-14 sm:py-28 md:py-36 px-3 sm:px-8 overflow-x-clip overflow-y-hidden">
       {/* Light warm background — brown-900 text for maximum contrast on light bg */}
       <div className="absolute inset-0 bg-stone-50" />
       {/* Subtle warm accent glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-amber-100/30 rounded-full blur-[150px]" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[300px] bg-brown-100/40 rounded-full blur-[120px]" />
 
-      <div className="relative max-w-6xl mx-auto">
+      <div className="relative max-w-6xl mx-auto max-w-full">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="text-center mb-16 sm:mb-20 md:mb-24"
+          className="text-center mb-12 sm:mb-20 md:mb-24"
         >
           <span className="inline-block text-[11px] uppercase tracking-[0.3em] text-amber-700 font-medium mb-5">
             About Us
@@ -72,7 +72,7 @@ export default function AboutSection() {
             <span className="italic text-brown-700">Wood Business</span>
           </h2>
           <div className="mt-5 mx-auto h-[1px] w-16 bg-gradient-to-r from-transparent via-amber-600/40 to-transparent" />
-          <p className="mt-6 text-base sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed font-light">
+          <p className="mt-5 text-[15px] sm:text-lg text-stone-600 max-w-2xl mx-auto leading-relaxed font-light px-2 sm:px-0">
             {businessInfo.about}
           </p>
         </motion.div>
@@ -83,7 +83,7 @@ export default function AboutSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-16 sm:mb-20"
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-5 mb-14 sm:mb-20"
         >
           {features.map((item) => (
             <motion.div
@@ -95,7 +95,7 @@ export default function AboutSection() {
                 e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
                 e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
               }}
-              className="card-hover card-glow bg-white rounded-2xl p-6 sm:p-7 border border-stone-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)] group"
+              className="card-hover card-glow bg-white rounded-2xl p-5 sm:p-7 border border-stone-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)] group"
             >
               <div
                 className="relative z-10 w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-transform duration-500 group-hover:scale-110"

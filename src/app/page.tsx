@@ -13,7 +13,7 @@ import FloatingActions from "../components/FloatingActions";
 
 export default function Home() {
   return (
-    <main id="home" className="relative">
+    <main id="home" className="relative overflow-x-clip">
       {/* Smooth scrolling engine */}
       <SmoothScroll />
       {/* Scroll progress bar at top */}

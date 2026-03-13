@@ -33,9 +33,9 @@ export default function HeroTextOverlays() {
   const ctaScale = useTransform(scrollYProgress, [0.75, 0.8, 0.9, 0.97], [0.95, 1, 1, 1.05]);
 
   return (
-    <div ref={containerRef} className="absolute inset-0 h-[500vh] pointer-events-none">
-      <div className="sticky top-0 h-screen flex items-center justify-center">
-        <div className="relative w-full max-w-5xl mx-auto px-6 sm:px-8 overflow-visible">
+    <div ref={containerRef} className="absolute inset-0 h-[500svh] md:h-[500vh] pointer-events-none overflow-x-clip">
+      <div className="sticky top-0 h-svh md:h-screen flex items-center justify-center overflow-x-clip">
+        <div className="relative w-full max-w-5xl mx-auto px-6 sm:px-8 overflow-x-clip">
           {/* Hero */}
           <motion.div
             style={{ opacity: heroOpacity, y: heroY, scale: heroScale, filter: useTransform(heroBlur, (v) => `blur(${v}px)`) }}
@@ -64,22 +64,6 @@ export default function HeroTextOverlays() {
                 </span>
               ))}
             </div>
-          </motion.div>
-
-          {/* Scroll indicator — positioned relative to the sticky h-screen parent */}
-          <motion.div
-            style={{ opacity: heroOpacity }}
-            className="fixed bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
-              className="flex flex-col items-center gap-2"
-            >
-              <span className="text-[10px] uppercase tracking-[0.25em] text-white/50 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">Scroll</span>
-              <div className="w-[1px] h-6 bg-gradient-to-b from-white/50 to-transparent" />
-              <ArrowDown className="w-4 h-4 text-white/60 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
-            </motion.div>
           </motion.div>
 
           {/* Process */}

@@ -20,9 +20,9 @@ export default function Footer() {
         {/* Top accent line */}
         <div className="h-[1px] bg-gradient-to-r from-transparent via-amber-700/30 to-transparent" />
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-8 pt-12 sm:pt-20 pb-8 sm:pb-12 pb-safe">
+        <div className="max-w-6xl mx-auto px-3 sm:px-8 pt-10 sm:pt-20 pb-8 sm:pb-12 pb-safe">
           {/* Top brand row */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-14 sm:mb-16">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 mb-12 sm:mb-16">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
                 <Image
@@ -50,11 +50,11 @@ export default function Footer() {
           </div>
 
           {/* Grid — 3 columns: About (wide), Services, Contact */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1.5fr] gap-12 sm:gap-10 lg:gap-16">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1.5fr] gap-10 sm:gap-10 lg:gap-16">
             {/* About */}
             <div>
               <h4 className="text-[11px] uppercase tracking-[0.2em] text-stone-500 font-medium mb-5">About</h4>
-              <p className="text-stone-400 text-sm leading-[1.8] font-light max-w-sm">
+              <p className="text-stone-400 text-sm leading-[1.75] font-light max-w-sm break-words">
                 {businessInfo.tagline}. Trusted wood cutting, transport, and
                 firewood supply partner with {businessInfo.experience} of
                 experience.
@@ -100,7 +100,7 @@ export default function Footer() {
                 </a>
                 <div className="flex items-start gap-2.5 text-stone-400 font-light">
                   <MapPin className="w-3.5 h-3.5 text-stone-600 mt-0.5 flex-shrink-0" />
-                  <span className="leading-relaxed">{businessInfo.address}</span>
+                  <span className="leading-relaxed break-words">{businessInfo.address}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-stone-400 font-light">
                   <Clock className="w-3.5 h-3.5 text-stone-600 flex-shrink-0" />

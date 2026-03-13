@@ -121,8 +121,8 @@ export default function ServiceShowcaseScroll() {
   return (
     <>
       <Preloader progress={loadProgress} isComplete={loaded} />
-      <div ref={containerRef} className="h-[500vh] relative">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
+      <div ref={containerRef} className="h-[500svh] md:h-[500vh] relative">
+        <div className="sticky top-0 h-svh md:h-screen w-full overflow-hidden">
           {/* Canvas background */}
           <canvas
             ref={canvasRef}

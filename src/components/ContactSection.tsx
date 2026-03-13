@@ -4,13 +4,6 @@ import { motion } from "framer-motion";
 import { businessInfo } from "../data/business";
 import { MapPin, Phone, Mail, Clock, MessageCircle, ArrowRight } from "lucide-react";
 
-const contactItems = [
-  { icon: MapPin, label: "Address", key: "address" },
-  { icon: Clock, label: "Working Hours", key: "hours" },
-  { icon: Phone, label: "Phone", key: "phone" },
-  { icon: Mail, label: "Email", key: "email" },
-] as const;
-
 const containerVariants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1 } },
@@ -27,19 +20,19 @@ const itemVariants = {
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="relative py-16 sm:py-28 md:py-32 px-4 sm:px-8 overflow-hidden">
+    <section id="contact" className="relative py-14 sm:py-28 md:py-32 px-3 sm:px-8 overflow-x-clip overflow-y-hidden">
       {/* Warm neutral background */}
       <div className="absolute inset-0 bg-brown-50" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[300px] bg-amber-200/20 rounded-full blur-[120px]" />
 
-      <div className="relative max-w-4xl mx-auto">
+      <div className="relative max-w-4xl mx-auto max-w-full">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-          className="text-center mb-12 sm:mb-14"
+          className="text-center mb-10 sm:mb-14"
         >
           <span className="inline-block text-[11px] uppercase tracking-[0.3em] text-amber-700 font-medium mb-5">
             Contact
@@ -48,7 +41,7 @@ export default function ContactSection() {
             Get In <span className="italic text-brown-700">Touch</span>
           </h2>
           <div className="mt-5 mx-auto h-[1px] w-16 bg-gradient-to-r from-transparent via-amber-600/40 to-transparent" />
-          <p className="mt-5 text-base sm:text-lg text-stone-500 font-light tracking-wide">
+          <p className="mt-4 text-[15px] sm:text-lg text-stone-500 font-light tracking-wide px-2 sm:px-0">
             Ready to place an order? We&apos;re here to help.
           </p>
         </motion.div>
@@ -59,7 +52,7 @@ export default function ContactSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-60px" }}
-          className="grid sm:grid-cols-2 gap-4 sm:gap-5 mb-8"
+          className="grid sm:grid-cols-2 gap-3.5 sm:gap-5 mb-7 sm:mb-8"
         >
           {/* Address */}
           <motion.div variants={itemVariants} className="card-hover bg-white rounded-2xl p-6 sm:p-7 border border-stone-100 shadow-[0_1px_3px_rgba(0,0,0,0.04)] group">
@@ -67,7 +60,7 @@ export default function ContactSection() {
               <MapPin className="w-5 h-5 text-amber-700" />
             </div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-stone-400 font-medium mb-1.5">Address</div>
-            <p className="text-brown-800 text-sm font-medium leading-relaxed">{businessInfo.address}</p>
+            <p className="text-brown-800 text-sm font-medium leading-relaxed break-words">{businessInfo.address}</p>
           </motion.div>
 
           {/* Working Hours */}
@@ -76,7 +69,7 @@ export default function ContactSection() {
               <Clock className="w-5 h-5 text-amber-700" />
             </div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-stone-400 font-medium mb-1.5">Working Hours</div>
-            <p className="text-brown-800 text-sm font-medium leading-relaxed">{businessInfo.workingHours}</p>
+            <p className="text-brown-800 text-sm font-medium leading-relaxed break-words">{businessInfo.workingHours}</p>
           </motion.div>
 
           {/* Phone */}
@@ -86,7 +79,7 @@ export default function ContactSection() {
             </div>
             <div className="text-[11px] uppercase tracking-[0.15em] text-stone-400 font-medium mb-1.5">Phone</div>
             {businessInfo.phone.map((p) => (
-              <a key={p} href={`tel:${p}`} className="block text-brown-800 text-sm font-medium hover:text-amber-700 transition-colors leading-relaxed py-1 min-h-[44px] flex items-center">
+              <a key={p} href={`tel:${p}`} className="block text-brown-800 text-sm font-medium hover:text-amber-700 transition-colors leading-relaxed py-1 min-h-[44px] flex items-center break-words">
                 {p}
               </a>
             ))}
@@ -110,7 +103,7 @@ export default function ContactSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-          className="bg-stone-900 rounded-2xl p-5 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 text-center sm:text-left"
+            className="bg-stone-900 rounded-2xl p-4 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 text-center sm:text-left"
         >
           <div>
             <h3 className="font-display text-lg sm:text-xl font-bold text-white tracking-tight">Need a quick response?</h3>

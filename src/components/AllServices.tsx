@@ -11,12 +11,14 @@ const serviceIcons = [Axe, Truck, Flame];
 function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
-  const [display, setDisplay] = useState("0");
+  const [display, setDisplay] = useState(() =>
+    /[\d.]+/.test(value) ? "0" : value
+  );
 
   useEffect(() => {
     if (!isInView) return;
     const numericMatch = value.match(/[\d.]+/);
-    if (!numericMatch) { setDisplay(value); return; }
+    if (!numericMatch) return;
     const target = parseFloat(numericMatch[0]);
     const prefix = value.slice(0, value.indexOf(numericMatch[0]));
     const postfix = value.slice(value.indexOf(numericMatch[0]) + numericMatch[0].length);
